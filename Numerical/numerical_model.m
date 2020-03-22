@@ -225,7 +225,7 @@ Ca = eye(4);
 Da = zeros(4,2);
 sys2 = ss(Aa,Ba,Ca,Da);
 
-rltool(sys1(1,:))
+%rltool(sys1(1,:))
 
 %% plotting initial response
 
