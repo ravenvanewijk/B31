@@ -21,9 +21,9 @@ MassLbs      =   MassKg/ 0.45359237;
 
 MomentInchLbs=   MassLbs .* PositionInch;
 
-SummassPay   =   sum(MassLbs);          
-SumMomentPay =   sum(MomentInchLbs);
-XcgDatum     =   SumMomentPay/SummassPay;  
+PaySummass   =   sum(MassLbs);          
+PaySumMoment =   sum(MomentInchLbs);
+PayXcgDatum  =   PaySumMoment/PaySummass;  
 
 % OEM
 BemptyW      = 9165.0;           % Basic Empty Weight (In pounds)
@@ -31,8 +31,8 @@ BemptyWXcg   = 291.65;           % cg from datum in inches
 BemptyWMoment= 2672953.5;        % Moment in Pound-Inch
 
 %Zerofuel 
-ZeroFuelMass =   SummassPay + BemptyW;
-ZeroFuelMom  =   SumMomentPay + BemptyWMoment;
+ZeroFuelMass =   PaySummass + BemptyW;
+ZeroFuelMom  =   PaySumMoment + BemptyWMoment;
 ZeroFuelXcg  =   ZeroFuelMom / ZeroFuelMass;
 
 %Fuel
@@ -47,7 +47,7 @@ RampXcg      =  RampMoment / RampMass ;
 
 %% In flight Weight and Xcg calculator
 %time        = time in seconds * 10
-t            = 4000            * 10
+t            = 10            * 10
 FuelUsed     = flightdata.lh_engine_FU.data(t) + flightdata.rh_engine_FU.data(t)
 
 FuelLeft     = Fuelmass - FuelUsed
@@ -78,3 +78,9 @@ FlightMoment = ZeroFuelMom + FlightFuelMoment;
 FlightMass   = RampMass - FuelUsed;
 FlightXcg    = FlightMoment / FlightMass;
 
+%% Other units
+C_bar = 2.0569                              %MAC lenght
+
+XcgMAC       = FlightXcg - 261.45           %Inches from the leading MAC
+XcgMACmeter  = XcgMAC*0.0254                %Meters from the leadiing edge MAC
+XcgMACper    = XcgMACmeter * 100/ C_bar     %percentage of MAC
