@@ -3,10 +3,10 @@
 
 % Stationary flight condition
 
-hp0    = 5010*0.3048;     % pressure altitude in the stationary flight condition [m]
-V0     = 249*0.5144;      % true airspeed in the stationary flight condition [m/sec]
-alpha0 = 1.7/180*pi;       	  % angle of attack in the stationary flight condition [rad]
-th0    = 2/180*pi;       	  % pitch angle in the stationary flight condition [rad]
+hp0    = 1530.1;     % pressure altitude in the stationary flight condition [m]
+V0     = 127.58;      % true airspeed in the stationary flight condition [m/sec]
+alpha0 = 1.8/180*pi;       	  % angle of attack in the stationary flight condition [rad]
+th0    = 0.563/180*pi;       	  % pitch angle in the stationary flight condition [rad]
 
 % Aircraft mass
 m      = 9165 + 2651.4;         	  % mass [kg]
@@ -177,17 +177,17 @@ xcg = 0.25*c;
 % Time [sec]
 
 %% Symmetric case
-Dc = (c/V0); % (c/Vt0)
+Dc = (c/V0); % (c/Vt0) 
 
-C1s = [- 2* muc* Dc, 0, 0, 0;
+C1s = [- 2* muc* Dc*1/V0, 0, 0, 0;
      0, (CZa - 2* muc)* Dc, 0, 0;
      0, 0, -Dc, 0;
-     0, Cmadot* Dc, 0, -2* muc* KY2* Dc ];
+     0, Cmadot* Dc, 0, -2* muc* KY2* Dc^2];
 
-C2s = [CXu, CXa, CZ0, 0;
-     CZu, CZa, -CX0, CZq + 2* muc;
-     0, 0, 0, 1;
-     Cmu, Cma, 0, Cmq];
+C2s = [CXu/V0, CXa, CZ0, CXq*Dc;
+     CZu/V0, CZa, -CX0, (CZq + 2* muc)*Dc;
+     0, 0, 0, Dc;
+     Cmu/V0, Cma, 0, Cmq*Dc];
 
 C3s = [CXde;
     CZde;
@@ -206,13 +206,13 @@ Db = (b/V0);
 
 C1a = [(CYbdot- 2* mub)* Db, 0, 0, 0;
      0, -0.5 * Db, 0, 0;
-     0, 0, -4*mub*KX2*Db, 4*mub*KXZ*Db;
-     Cnbdot*Db, 0, 4*mub*KXZ*Db, -4*mub*KZ2*Db];
+     0, 0, -4*mub*KX2*0.5*Db^2, 4*mub*KXZ*0.5*Db^2;
+     Cnbdot*Db, 0, 4*mub*KXZ*0.5*Db^2, -4*mub*KZ2*0.5*Db^2];
 
-C2a = [CYb, CL, CYp, CYr - 4*mub;
-     0, 0, 1, 0;
-     Clb, 0, Clp, Clr;
-     Cnb, 0, Cnp, Cnr];
+C2a = [CYb, CL, CYp*0.5*Db, (CYr - 4*mub)*0.5*Db;
+     0, 0, 1*0.5*Db, 0;
+     Clb, 0, Clp*0.5*Db, Clr*0.5*Db;
+     Cnb, 0, Cnp*0.5*Db, Cnr*0.5*Db];
 
 C3a = [CYda, CYdr;
     0, 0;
@@ -227,55 +227,85 @@ sys2 = ss(Aa,Ba,Ca,Da);
 
 %rltool(sys1(1,:))
 
-%% plotting initial response
+%% Plotting system responses (mainly for validation)
 
 % Symmetric
 
-% Short period
-subplot(2,3,1)
+%% Short period
+
+%subplot(2,3,1)
 t = 0:0.01:15;
-x0 = [0, 0.1, 0, 0];
-y1 = initial(sys1, x0, t);
-plot(t, y1(:,:))
-title('Short period')
-legend('u [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]')
+%x0 = [0, 0.1, 0, 0];
+u = zeros(1,length(t));
+u(t>=1 & t<=12.8) = -0.6761;        %Elevator input in rad
+x0 = [174.4,5.595,3.931,0.2602];     %Initial values
+y1 = lsim(sys1, u, t, x0);
 
-% Phugoid
-subplot(2,3,2)
-t = 0:0.01:200;
-x0 = [0, 0.1, 0, 0];
-y2 = initial(sys1, x0, t);
-plot(t, y2(:,:))
-title('Phugoid')
-legend('u [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]')
+t2 = 45*60;
+I2 = find(flightdata.time.data==t2);
 
-% Asymmetric
+u_tas2 = flightdata.Dadc1_tas.data((I2+397):(I2+547));
+alpha2 = flightdata.vane_AOA.data((I2+397):(I2+547));
+theta2 = flightdata.Ahrs1_Pitch.data((I2+397):(I2+547));
+q2 = flightdata.Ahrs1_bPitchRate.data((I2+397):(I2+547));
+time2 = 0:0.1:15;
 
-% Aperiodic roll
-subplot(2,3,3)
-t = 0:0.01:15;
-x0 = [0, 0.1, 0, 0];
-y3 = initial(sys2, x0, t);
-plot(t, y3(:,:))
-title('Aperiodic roll')
-legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
+%plot(time2,[u_tas2,alpha2,theta2,q2]);
+subplot(2,2,1)
+plot(t, y1(:,1),time2,u_tas2)
+legend('numerical','test')
+title('u')
+subplot(2,2,2)
+plot(t, y1(:,2),time2,alpha2)
+legend('numerical','test')
+title('AoA')
+subplot(2,2,3)
+plot(t, y1(:,3),time2,theta2)
+legend('numerical','test')
+title('Pitch')
+subplot(2,2,4)
+plot(t, y1(:,4),time2,q2)
+legend('numerical','test')
+title('Pitch rate')
+%legend('u [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]','uTAS [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]')
 
-% Dutch roll
-subplot(2,3,4)
-t = 0:0.01:15;
-x0 = [0.1, 0, 0, 0];
-y4 = initial(sys2, x0, t);
-plot(t, y4(:,:))
-title('Dutch roll')
-legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
+%% Phugoid
+% subplot(2,3,2)
+% t = 0:0.01:200;
+% x0 = zeros(1,length(t));
+% x0(t>=1 & t<=13) = -1;
+% y2 = initial(sys1, x0, t);
+% plot(t, y2(:,:))
+% title('Phugoid')
+% legend('u [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]')
 
-% Spiral
-subplot(2,3,5)
-t = 0:0.01:100;
-x0 = [0, 0.1, 0, 0];
-y5 = initial(sys2, x0, t);
-plot(t, y5(:,:))
-title('Spiral')
-legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
 
+%% Asymmetric
+
+%% Aperiodic roll
+% subplot(2,3,3)
+% t = 0:0.01:15;
+% x0 = [0, 0.1, 0, 0];
+% y3 = initial(sys2, x0, t);
+% plot(t, y3(:,:))
+% title('Aperiodic roll')
+% legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
+
+%% Dutch roll
+% subplot(2,3,4)
+% t = 0:0.01:15;
+% x0 = [0.1, 0, 0, 0];
+% y4 = initial(sys2, x0, t);
+% plot(t, y4(:,:))
+% title('Dutch roll')
+% legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
+
+%% Spiral
+% subplot(2,3,5)
+% t = 0:0.01:100;
+% x0 = [0, 0.1, 0, 0];
+% y5 = initial(sys2, x0, t);
+% plot(t, y5(:,:))
+% title('Spiral')
+% legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
 
