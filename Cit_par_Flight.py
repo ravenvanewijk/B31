@@ -1,5 +1,5 @@
 # Citation 550 - Linear simulation
-
+#Changes made
 import scipy as np
 from math import pi,sin,cos
 # xcg = 0.25 * c
@@ -15,13 +15,13 @@ th0    =            # pitch angle in the stationary flight condition [rad]
 m      =  6612           # mass [kg]
 
 # aerodynamic properties
-e      =  0.837          # Oswald factor [ ]
-CD0    =  0.02315           # Zero lift drag coefficient [ ]
-CLa    =  4.910           # Slope of CL-alpha curve [ ]
+e      =  0.873          # Oswald factor [ ]
+CD0    =  0.02205           # Zero lift drag coefficient [ ]
+CLa    =  4.68107           # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma    =   -1.4556         # longitudinal stabilty [ ]
-Cmde   =    -0.63579         # elevator effectiveness [ ]
+Cma    =   -1.38183         # longitudinal stabilty [ ]
+Cmde   =    -0.60358         # elevator effectiveness [ ]
 
 # Aircraft geometry
 
