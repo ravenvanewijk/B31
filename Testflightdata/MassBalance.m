@@ -47,9 +47,16 @@ RampXcg      =  RampMoment / RampMass ;
 
 %% In flight Weight and Xcg calculator
 %time        = time in seconds * 10
-t            = (51*60+2)            * 10
+t            = ((15*60+39-8.9)  * 10 )                  %-8.9 correction 
+                                                        %because time in 
+                                                        %data starts at 
+                                                        %9 seconds not at 0.1 sec.
+                                                        %Furthermore times
+                                                        %10 to match with
+                                                        %index number
+                                                        
 FuelUsed     = flightdata.lh_engine_FU.data(t) + flightdata.rh_engine_FU.data(t)
-
+FuelUsedKg   = FuelUsed * 0.45359237
 FuelLeft     = Fuelmass - FuelUsed
 
 

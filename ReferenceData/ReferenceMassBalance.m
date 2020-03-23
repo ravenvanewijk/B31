@@ -6,7 +6,7 @@ load ReferenceData %Initiate data
 %Payload 
 %Position    =   [P1 ; P2 ; 1L ; 1R ; 2L ; 2R ; 3L ; 3R ; emp; Coi];
 MassKg       =   [95 ; 92 ; 66 ; 61 ; 75 ; 78 ; 86 ; 68 ; 00 ; 74 ];
-PositionInch =   [131; 131; 214; 214; 251; 251; 131; 288; 170; 170]; 
+PositionInch =   [131; 131; 214; 214; 251; 251; 288; 131; 170; 170]; 
 MassLbs      =   MassKg/ 0.45359237;
 
 MomentInchLbs=   MassLbs .* PositionInch;
@@ -37,7 +37,13 @@ RampXcg      =  RampMoment / RampMass ;
 
 %% In flight Weight and Xcg calculator
 %time        = time in seconds * 10
-t            = (52*60+46)           * 10;
+t            = (52*60+46-8.9)           * 10;                %-8.9 correction 
+                                                        %because time in 
+                                                        %data starts at 
+                                                        %9 seconds not at 0.1 sec.
+                                                        %Furthermore times
+                                                        %10 to match with
+                                                        %index number
 FuelUsed     = flightdata.lh_engine_FU.data(t) + flightdata.rh_engine_FU.data(t)
 
 FuelLeft     = Fuelmass - FuelUsed
