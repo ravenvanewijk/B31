@@ -5,11 +5,17 @@ from math import pi,sin,cos
 # xcg = 0.25 * c
 
 # Stationary flight condition
+# NOTE! These Stationary flight values are used for inputs of the analytical model and
+# and numerical model. They are for data point (15:39:00). These values can
+# not be used for validation!
+
 
 hp0    =  1527.05    	      # pressure altitude in the stationary flight condition [m]
 V0     =  136.00        # true airspeed in the stationary flight condition [m/sec]
 alpha0 =  1.70          # angle of attack in the stationary flight condition [rad]
-th0    =           # pitch angle in the stationary flight condition [rad]
+th0    =  1.384         # pitch angle in the stationary flight condition [rad]
+
+#Something is wrong with th0 and alpha0
 
 # Aircraft mass
 m      =    6549         # mass [kg]
