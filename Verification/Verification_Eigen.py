@@ -10,7 +10,7 @@ from math import radians as rad
 hp0    =  1530.1    	      # pressure altitude in the stationary flight condition [m]
 V0     =  134.56        # true airspeed in the stationary flight condition [m/sec]
 alpha0 =  rad(1.8)          # angle of attack in the stationary flight condition [rad]
-th0    =         # pitch angle in the stationary flight condition [rad]
+th0    =  rad(2.2)       # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
 m      =  6612           # mass [kg]
@@ -114,26 +114,36 @@ Cnda   =  -0.0120
 Cndr   =  -0.0939
 
 
-def abcimag(A,B,C):
-    return (-B+np.sqrt(4*A*C-B**2)*1j)/(2*A),(-B-np.sqrt(4*A*C-B**2)*1j)/(2*A)
+symcor = V0/c               #assymetric correction factor
+asymcor= V0/b               #assymetric correction factor
 
+
+#ABC formula with imaginary part
+def abcimag(A,B,C,cor):
+    return (-B*cor+cor*np.absolute(np.sqrt(4*A*C-B**2))*1j)/(2*A),(-B*cor-cor*np.absolute(np.sqrt(4*A*C-B**2))*1j)/(2*A)
+
+
+#SHORT PERIOD
 ac1    = 4*muc**2*KY2
 bc1    = -2*muc*(KY2*CZa+Cmadot+Cmq)
 cc1    = CZa*Cmq -2*muc*Cma
-lamdac1=abcimag(ac1,bc1,cc1)
+lamdac1= abcimag(ac1,bc1,cc1,symcor)
 
-
+#PHUGOID
 ac2    = 2*muc*(CZa*Cmq - 2*muc*Cma)
 bc2    = 2*muc*(CXu*Cma-Cmu*CXa) + Cmq*(CZu*CXa-CXu*CZa)
 cc2    = CZ0 * (Cmu*CZa - CZu*Cma)
-lamdac2=abcimag(ac2,bc2,cc2)
+lamdac2= abcimag(ac2,bc2,cc2,symcor)
 
-lamdab1 = Clp/(4*mub*KX2)
+#APERIODIC ROLL
+lamdab1 = (Clp/(4*mub*KX2))*asymcor
 
+#DUTCH ROLL
 ab2    = 8 * mub**2*KZ2
 bb2    = -2*mub*(Cnr+2*KZ2*CYb)
 cb2    = 4*mub*Cnb + CYb*Cnr
-lamdab2=abcimag(ab2,bb2,cb2)
+lamdab2= abcimag(ab2,bb2,cb2,asymcor)
 
-lamdab3 = 2*CL*(Clb*Cnr - Cnb*Clr)/(Clp*(CYb*Cnr+4*mub*Cnb)-Cnp*(CYb*Clr + 4* mub*Clb))
+#SPIRAL
+lamdab3 = (2*CL*(Clb*Cnr - Cnb*Clr)/(Clp*(CYb*Cnr+4*mub*Cnb)-Cnp*(CYb*Clr + 4* mub*Clb)))*asymcor
 
