@@ -2,27 +2,26 @@
 
 import scipy as np
 from math import pi,sin,cos
-from math import radians as rad
 # xcg = 0.25 * c
 
 # Stationary flight condition
 
-hp0    =  1530.1    	      # pressure altitude in the stationary flight condition [m]
-V0     =  134.56        # true airspeed in the stationary flight condition [m/sec]
-alpha0 =  rad(1.8)          # angle of attack in the stationary flight condition [rad]
+hp0    =      	      # pressure altitude in the stationary flight condition [m]
+V0     =          # true airspeed in the stationary flight condition [m/sec]
+alpha0 =            # angle of attack in the stationary flight condition [rad]
 th0    =           # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      =  6612           # mass [kg]
+m      =             # mass [kg]
 
 # aerodynamic properties
-e      =   0.838         # Oswald factor [ ]
-CD0    =   0.023          # Zero lift drag coefficient [ ]
-CLa    =   4.910          # Slope of CL-alpha curve [ ]
+e      =            # Oswald factor [ ]
+CD0    =             # Zero lift drag coefficient [ ]
+CLa    =             # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma    =   0.07620         # longitudinal stabilty [ ]
-Cmde   =   0.02540          # elevator effectiveness [ ]
+Cma    =            # longitudinal stabilty [ ]
+Cmde   =             # elevator effectiveness [ ]
 
 # Aircraft geometry
 
@@ -113,27 +112,4 @@ Cnr    =  -0.2061
 Cnda   =  -0.0120
 Cndr   =  -0.0939
 
-
-def abcimag(A,B,C):
-    return (-B+np.sqrt(4*A*C-B**2)*1j)/(2*A),(-B-np.sqrt(4*A*C-B**2)*1j)/(2*A)
-
-ac1    = 4*muc**2*KY2
-bc1    = -2*muc*(KY2*CZa+Cmadot+Cmq)
-cc1    = CZa*Cmq -2*muc*Cma
-lamdac1=abcimag(ac1,bc1,cc1)
-
-
-ac2    = 2*muc*(CZa*Cmq - 2*muc*Cma)
-bc2    = 2*muc*(CXu*Cma-Cmu*CXa) + Cmq*(CZu*CXa-CXu*CZa)
-cc2    = CZ0 * (Cmu*CZa - CZu*Cma)
-lamdac2=abcimag(ac2,bc2,cc2)
-
-lamdab1 = Clp/(4*mub*KX2)
-
-ab2    = 8 * mub**2*KZ2
-bb2    = -2*mub*(Cnr+2*KZ2*CYb)
-cb2    = 4*mub*Cnb + CYb*Cnr
-lamdab2=abcimag(ab2,bb2,cb2)
-
-lamdab3 = 2*CL*(Clb*Cnr - Cnb*Clr)/(Clp*(CYb*Cnr+4*mub*Cnb)-Cnp*(CYb*Clr + 4* mub*Clb))
 
