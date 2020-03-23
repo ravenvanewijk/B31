@@ -117,10 +117,9 @@ Cndr   =  -0.0939
 symcor = V0/c               #assymetric correction factor
 asymcor= V0/b               #assymetric correction factor
 
-
 #ABC formula with imaginary part
 def abcimag(A,B,C,cor):
-    return (-B*cor+cor*np.absolute(np.sqrt(4*A*C-B**2))*1j)/(2*A),(-B*cor-cor*np.absolute(np.sqrt(4*A*C-B**2))*1j)/(2*A)
+    return (-B*cor+cor*np.absolute(np.sqrt(4*A*C-B**2))*1j)/(2*A)
 
 
 #SHORT PERIOD
@@ -146,4 +145,14 @@ lamdab2= abcimag(ab2,bb2,cb2,asymcor)
 
 #SPIRAL
 lamdab3 = (2*CL*(Clb*Cnr - Cnb*Clr)/(Clp*(CYb*Cnr+4*mub*Cnb)-Cnp*(CYb*Clr + 4* mub*Clb)))*asymcor
+
+
+print("                REAL VALUE      IMAGINARY VALUE")
+print("SHORT PERIOD    ", round(np.real(lamdac1),5), "      ",round(np.imag(lamdac1),5))
+print("PHUGOID         ", round(np.real(lamdac2),5), "      ",round(np.imag(lamdac2),5))
+print("APERIODIC ROLL  ", round(np.real(lamdab1),5), "      ",round(np.imag(lamdab1),5))
+print("DUTCH ROLL      ", round(np.real(lamdab2),5), "      ",round(np.imag(lamdab2),5))
+print("SPIRAL          ", round(np.real(lamdab3),5), "      ",round(np.imag(lamdab3),5))
+
+
 
