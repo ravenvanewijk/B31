@@ -12,13 +12,13 @@ th0    = 0.563/180*pi;       	  % pitch angle in the stationary flight condition
 m      = 6756.9;         	  % mass [kg]
 
 % aerodynamic properties
-e      = 0.736;            % Oswald factor [ ]
-CD0    = 0.023;            % Zero lift drag coefficient [ ]
-CLa    = 4.910;            % Slope of CL-alpha curve [ ]
+e      = 0.873;            % Oswald factor [ ]
+CD0    = 0.02205;          % Zero lift drag coefficient [ ]
+CLa    = 4.68107;            % Slope of CL-alpha curve [ ]
 
 % Longitudinal stability
-Cma    = -0.6356;          %-0.5626;     % longitudinal stabilty [ ]
-Cmde   = -1.455;          %-1.1642;     % elevator effectiveness [ ]
+Cma    =  -0.60358;      %-0.5626;     % longitudinal stabilty [ ]
+Cmde   =  -1.38183;           %-1.1642;     % elevator effectiveness [ ]
 
 % Aircraft geometry
 
@@ -202,7 +202,7 @@ sys1 = ss(As,Bs,Cs,Ds);
 
 
 pole(sys1)
-rltool(sys1(1,:))
+%rltool(sys1(1,:))
 
 %% Asymmetric case
 
@@ -210,8 +210,8 @@ Db = (b/V0);
 
 C1a = [(CYbdot- 2* mub)* Db, 0, 0, 0;
      0, -0.5 * Db, 0, 0;
-     0, 0, -4*mub*KX2*0.5*Db^2, 4*mub*KXZ*0.5*Db^2;
-     Cnbdot*Db, 0, 4*mub*KXZ*0.5*Db^2, -4*mub*KZ2*0.5*Db^2];
+     0, 0, -2*mub*KX2*Db^2, 2*mub*KXZ*Db^2;
+     Cnbdot*Db, 0, 2*mub*KXZ*Db^2, -2*mub*KZ2*Db^2];
 
 C2a = [CYb, CL, CYp*0.5*Db, (CYr - 4*mub)*0.5*Db;
      0, 0, 1*0.5*Db, 0;
