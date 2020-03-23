@@ -6,22 +6,22 @@ from math import pi,sin,cos
 
 # Stationary flight condition
 
-hp0    =  1530.1    	      # pressure altitude in the stationary flight condition [m]
-V0     =          # true airspeed in the stationary flight condition [m/sec]
-alpha0 =            # angle of attack in the stationary flight condition [rad]
+hp0    =  1527.05    	      # pressure altitude in the stationary flight condition [m]
+V0     =  136.00        # true airspeed in the stationary flight condition [m/sec]
+alpha0 =  1.70          # angle of attack in the stationary flight condition [rad]
 th0    =           # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      =             # mass [kg]
+m      =    6549         # mass [kg]
 
 # aerodynamic properties
-e      =            # Oswald factor [ ]
-CD0    =             # Zero lift drag coefficient [ ]
-CLa    =             # Slope of CL-alpha curve [ ]
+e      =  0.416          # Oswald factor [ ]
+CD0    =  0.02171           # Zero lift drag coefficient [ ]
+CLa    =  5.0306           # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma    =            # longitudinal stabilty [ ]
-Cmde   =             # elevator effectiveness [ ]
+Cma    =   -2.29875         # longitudinal stabilty [ ]
+Cmde   =   -1.11742          # elevator effectiveness [ ]
 
 # Aircraft geometry
 

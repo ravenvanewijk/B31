@@ -1,22 +1,12 @@
 %%Calculate W(t) Xcg(t)
-load FTISxprt-20200305_flight3 %Initiate data
-
-%Passenger weights in ([kg's;inch;inch])
-%p1 = [80; 131; 1];                      %pilot 1
-%p2 = [102; 131; 1];                     %pilot 2
-%Marta = [60; 214: 1];                        %co-ordinator
-%Jari  = [75; 214; 1]     ;                    %observer 1L:		
-%Martin = [83; 251; 1]      ;                  %observer 1R:		
-%Wessel = [66; 251; 1]     ;                   %observer 2L:		
-%Simon =	[89; 288; 1]     ;                    %observer 2R:		
-%Niek =	[85; 288; 1]    ;                     %observer 3L:		
-%Julian	= [90; 170; 1]  ;                    %observer 3R:		
+clear
+load ReferenceData %Initiate data	
 
 %% Rampmass calculator
 %Payload 
 %Position    =   [P1 ; P2 ; 1L ; 1R ; 2L ; 2R ; 3L ; 3R ; emp; Coi];
-MassKg       =   [90 ; 102; 75 ; 83 ; 66 ; 89 ; 85 ; 90 ; 00 ; 60 ];
-PositionInch =   [131; 131; 214; 214; 251; 251; 288; 288; 170; 170]; 
+MassKg       =   [95 ; 92 ; 66 ; 61 ; 75 ; 78 ; 86 ; 68 ; 00 ; 74 ];
+PositionInch =   [131; 131; 214; 214; 251; 251; 131; 288; 170; 170]; 
 MassLbs      =   MassKg/ 0.45359237;
 
 MomentInchLbs=   MassLbs .* PositionInch;
@@ -36,7 +26,7 @@ ZeroFuelMom  =   PaySumMoment + BemptyWMoment;
 ZeroFuelXcg  =   ZeroFuelMom / ZeroFuelMass;
 
 %Fuel
-Fuelmass     = 4100 ;                               %Blockfuel
+Fuelmass     = 4050 ;                            %Blockfuel
 FuelMoment   = 11705.5*100;                         %From E2 Appendix assigment
 
 %Rampmass 
@@ -47,13 +37,37 @@ RampXcg      =  RampMoment / RampMass ;
 
 %% In flight Weight and Xcg calculator
 %time        = time in seconds * 10
-t            = (51*60+2)            * 10
+t            = (52*60+46)           * 10;
 FuelUsed     = flightdata.lh_engine_FU.data(t) + flightdata.rh_engine_FU.data(t)
 
 FuelLeft     = Fuelmass - FuelUsed
 
 
 steeringmat = [...
+   29816    100
+   59118    200
+   87908    300
+   116542   400
+   144840   500
+   173252   600
+   201480   700
+   229884   800
+   258192   900
+   286630   1000
+   315018   1100
+   343452   1200
+   371852   1300
+   400323   1400
+   428776   1500
+   457224   1600
+   485656   1700
+   514116   1800
+   542564   1900
+   570990   2000
+   599404   2100
+   627847   2200
+   656282   2300
+   684696   2400
    713100   2500
    741533   2600
    769960   2800
@@ -76,11 +90,12 @@ steeringmat = [...
 FlightFuelMoment   = interp1(steeringmat(2,:), steeringmat(1,:), FuelLeft, 'linear', 'extrap');
 FlightMoment = ZeroFuelMom + FlightFuelMoment;
 FlightMass   = RampMass - FuelUsed;
+FlightMassKG = FlightMass * 0.45359237;
 FlightXcg    = FlightMoment / FlightMass;
 
 %% Other units
 C_bar = 2.0569                              %MAC lenght
 
-XcgMAC       = FlightXcg - 261.45           %Inches from the leading MAC
-XcgMACmeter  = XcgMAC*0.0254                %Meters from the leadiing edge MAC
-XcgMACper    = XcgMACmeter * 100/ C_bar     %percentage of MAC
+XcgMAC       = FlightXcg - 261.45 ;          %Inches from the leading MAC
+XcgMACmeter  = XcgMAC*0.0254       ;         %Meters from the leadiing edge MAC
+XcgMACper    = XcgMACmeter * 100/ C_bar;     %percentage of MAC
