@@ -10,7 +10,7 @@ from math import radians as rad
 hp0    =  1530.1    	      # pressure altitude in the stationary flight condition [m]
 V0     =  134.56        # true airspeed in the stationary flight condition [m/sec]
 alpha0 =  rad(1.8)          # angle of attack in the stationary flight condition [rad]
-th0    =           # pitch angle in the stationary flight condition [rad]
+th0    =         # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
 m      =  6612           # mass [kg]
@@ -48,8 +48,8 @@ R      = 287.05          # specific gas constant [m^2/sec^2K]
 g      = 9.81            # [m/sec^2] (gravity constant)
 
 # air density [kg/m^3]  
-#rho    = rho0 **( ((1+(lamda * hp0 / Temp0))), (-((g / (lamda*R)) + 1)))   
-rho=1.2
+rho    = rho0 * pow( ((1+(lamda * hp0 / Temp0))), (-((g / (lamda*R)) + 1)))   
+
 W      = m * g            # [N]       (aircraft weight)
 
 # Constant values concerning aircraft inertia
