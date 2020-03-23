@@ -2,26 +2,27 @@
 
 import scipy as np
 from math import pi,sin,cos
+from math import radians as rad
 # xcg = 0.25 * c
 
 # Stationary flight condition
 
 hp0    =  1530.1    	      # pressure altitude in the stationary flight condition [m]
-V0     =          # true airspeed in the stationary flight condition [m/sec]
-alpha0 =            # angle of attack in the stationary flight condition [rad]
+V0     =  134.56        # true airspeed in the stationary flight condition [m/sec]
+alpha0 =  rad(1.8)          # angle of attack in the stationary flight condition [rad]
 th0    =           # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      =             # mass [kg]
+m      =  6612           # mass [kg]
 
 # aerodynamic properties
-e      =            # Oswald factor [ ]
-CD0    =             # Zero lift drag coefficient [ ]
-CLa    =             # Slope of CL-alpha curve [ ]
+e      =   0.838         # Oswald factor [ ]
+CD0    =   0.023          # Zero lift drag coefficient [ ]
+CLa    =   4.910          # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma    =            # longitudinal stabilty [ ]
-Cmde   =             # elevator effectiveness [ ]
+Cma    =   0.07620         # longitudinal stabilty [ ]
+Cmde   =   0.02540          # elevator effectiveness [ ]
 
 # Aircraft geometry
 
