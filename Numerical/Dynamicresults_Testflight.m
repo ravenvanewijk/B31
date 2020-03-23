@@ -11,7 +11,6 @@ u_tas1 = flightdata.Dadc1_tas.data((I1+0):(I1+2000));
 alpha1 = flightdata.vane_AOA.data((I1+0):(I1+2000));
 theta1 = flightdata.Ahrs1_Pitch.data((I1+0):(I1+2000));
 q1 = flightdata.Ahrs1_bPitchRate.data((I1+0):(I1+2000));
-
 %elev_dte = flightdata.delta_e.data((I1+272):(I1+2000));
 
 time1 = 0:0.1:200;
@@ -39,7 +38,6 @@ plot(time2,[u_tas2,alpha2,theta2,q2,elev_dte2]);
 legend('uTAS [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]','elev')
 
 I = find(flightdata.time.data==939);
-flightdata.Ahrs1_Pitch.data(I)
 
 % Dutch roll 00:46
 % Aperiodic roll 00:48

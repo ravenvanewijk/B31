@@ -4,21 +4,21 @@
 % Stationary flight condition
 
 hp0    = 1530.1;     % pressure altitude in the stationary flight condition [m]
-V0     = 127.58;      % true airspeed in the stationary flight condition [m/sec]
+V0     = 134.56;      % true airspeed in the stationary flight condition [m/sec]
 alpha0 = 1.8/180*pi;       	  % angle of attack in the stationary flight condition [rad]
 th0    = 0.563/180*pi;       	  % pitch angle in the stationary flight condition [rad]
 
 % Aircraft mass
-m      = 9165 + 2651.4;         	  % mass [kg]
+m      = 6756.9;         	  % mass [kg]
 
 % aerodynamic properties
-e      = 0.8;            % Oswald factor [ ]
-CD0    = 0.04;            % Zero lift drag coefficient [ ]
-CLa    = 5.084;            % Slope of CL-alpha curve [ ]
+e      = 0.736;            % Oswald factor [ ]
+CD0    = 0.023;            % Zero lift drag coefficient [ ]
+CLa    = 4.910;            % Slope of CL-alpha curve [ ]
 
 % Longitudinal stability
-Cma    = -0.5626;            % longitudinal stabilty [ ]
-Cmde   = -1.1642;            % elevator effectiveness [ ]
+Cma    = -0.6356;          %-0.5626;     % longitudinal stabilty [ ]
+Cmde   = -1.455;          %-1.1642;     % elevator effectiveness [ ]
 
 % Aircraft geometry
 
@@ -43,7 +43,8 @@ Temp0  = 288.15;          % temperature at sea level in ISA [K]
 R      = 287.05;          % specific gas constant [m^2/sec^2K]
 g      = 9.81;            % [m/sec^2] (gravity constant)
 
-rho    = rho0*((1+(lambda*hp0/Temp0)))^(-((g/(lambda*R))+1));   % [kg/m^3]  (air density)
+%rho    = rho0*((1+(lambda*hp0/Temp0)))^(-((g/(lambda*R))+1));   % [kg/m^3]  (air density)
+rho = 1.2;
 W      = m*g;				                        % [N]       (aircraft weight)
 
 % Constant values concerning aircraft inertia
@@ -71,7 +72,7 @@ CD = CD0 + (CLa*alpha0)^2/(pi*A*e);  % Drag coefficient [ ]
 
 CX0    = W*sin(th0)/(0.5*rho*V0^2*S);
 CXu    = -0.02792;
-CXa    = -0.47966;
+CXa    = +0.47966;  %was negative 
 CXadot = +0.08330;
 CXq    = -0.28170;
 CXde   = -0.03728;
@@ -177,17 +178,16 @@ xcg = 0.25*c;
 % Time [sec]
 
 %% Symmetric case
-Dc = (c/V0); % (c/Vt0) 
 
-C1s = [- 2* muc* Dc/V0, 0, 0, 0;
-     0, (CZa - 2* muc)* Dc, 0, 0;
-     0, 0, -Dc, 0;
-     0, Cmadot* Dc, 0, -2* muc* KY2* Dc^2];
+C1s = [- 2* muc* (c/V0^2), 0, 0, 0;
+     0, (CZadot - 2* muc)* (c/V0), 0, 0;
+     0, 0, -(c/V0), 0;
+     0, Cmadot* (c/V0), 0, -2* muc* KY2*(c/V0)^2];
 
-C2s = [CXu/V0, CXa, CZ0, CXq*Dc;
-     CZu/V0, CZa, -CX0, (CZq + 2* muc)*Dc;
-     0, 0, 0, Dc;
-     Cmu/V0, Cma, 0, Cmq*Dc];
+C2s = [CXu/V0, CXa, CZ0, CXq*(c/V0);
+     CZu/V0, CZa, -CX0, (CZq + 2* muc)*(c/V0);
+     0, 0, 0,1*(c/V0);
+     Cmu/V0, Cma, 0, Cmq*(c/V0)];
 
 C3s = [CXde;
     CZde;
@@ -200,7 +200,9 @@ Cs = eye(4);
 Ds = zeros(4,1);
 sys1 = ss(As,Bs,Cs,Ds);
 
+
 pole(sys1)
+rltool(sys1(1,:))
 
 %% Asymmetric case
 
@@ -229,37 +231,37 @@ sys2 = ss(Aa,Ba,Ca,Da);
 
 pole(sys2)
 
-
-%rltool(sys1(1,:))
-
 %% Plotting initial responses to disturbance input (requirement no.11)
 
 % Symmetric
 
 %% Short period
-
+%AoA and pitch rate the short period damping the best
 subplot(2,3,1)
-t = 0:0.01:15;
-x0 = [0,0.1,0,0];
-y1 = initial(sys1, x0, t);
-plot(t, y1(:,:))
-title('Short period')
-legend('u [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]')
+t = 0:0.01:5;
+%x0 = [0,0.1,0,0];
+y1 = -0.005*step(sys1, t); %distubance input on d_e pf -0.005 rad
+plot(t, y1(:,2),t,y1(:,4))
+legend('\alpha [rad]','q [rad/s]')
 
 %% Phugoid
+%U and theta show this eigenmotion response the best
 subplot(2,3,2)
-t = 0:0.01:200;
-x0 = [0,0.1,0,0];
-y2 = initial(sys1, x0, t);
-plot(t, y2(:,:))
-title('Phugoid')
-legend('u [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]')
+t = 0:0.01:1000;
+y2 = -0.005*step(sys1, t); %distubance input on d_e pf -0.005 rad
+plot(t, y2(:,1))
+legend('u [m/s]')
 
+subplot(2,3,3)
+t = 0:0.01:1000;
+y2 = -0.005*step(sys1, t); %distubance input on d_e pf -0.005 rad
+plot(t, y2(:,3))
+legend('\theta [rad]')
 
 %% Asymmetric
 
 %% Aperiodic roll
-subplot(2,3,3)
+subplot(2,3,4)
 t = 0:0.01:15;
 x0 = [0, 0.1, 0, 0];
 y3 = initial(sys2, x0, t);
@@ -268,7 +270,7 @@ title('Aperiodic roll')
 legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
 
 %% Dutch roll
-subplot(2,3,4)
+subplot(2,3,5)
 t = 0:0.01:15;
 x0 = [0.1, 0, 0, 0];
 y4 = initial(sys2, x0, t);
@@ -277,7 +279,7 @@ title('Dutch roll')
 legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
 
 %% Spiral
-subplot(2,3,5)
+subplot(2,3,6)
 t = 0:0.01:100;
 x0 = [0, 0.1, 0, 0];
 y5 = initial(sys2, x0, t);
