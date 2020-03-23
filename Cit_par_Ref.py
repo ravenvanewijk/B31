@@ -6,7 +6,7 @@ from math import pi,sin,cos
 
 # Stationary flight condition
 # NOTE! These Stationary flight values are used for inputs of the analytical model and
-# and numerical model. They are for data point (15:39:00). These values can
+# and numerical model. They are for data point (19:17:00). These values can
 # not be used for validation!
 
 
