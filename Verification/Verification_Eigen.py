@@ -10,7 +10,7 @@ from math import radians as rad
 hp0    =  1530.1    	      # pressure altitude in the stationary flight condition [m]
 V0     =  134.56        # true airspeed in the stationary flight condition [m/sec]
 alpha0 =  rad(1.8)          # angle of attack in the stationary flight condition [rad]
-th0    =  rad(2.2)       # pitch angle in the stationary flight condition [rad]
+th0    =  0.563       # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
 m      =  6612           # mass [kg]
@@ -21,8 +21,8 @@ CD0    =   0.023          # Zero lift drag coefficient [ ]
 CLa    =   4.910          # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma    =   0.07620         # longitudinal stabilty [ ]
-Cmde   =   0.02540          # elevator effectiveness [ ]
+Cma    =   -0.6356        # longitudinal stabilty [ ]
+Cmde   =   -1.455         # elevator effectiveness [ ]
 
 # Aircraft geometry
 
