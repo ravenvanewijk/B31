@@ -47,48 +47,60 @@ RampXcg      =  RampMoment / RampMass ;
 
 
 %% In flight Weight and Xcg calculator
+%%Plotter
+ls       = []                                           %Empty list
+ls2       = []                                           %Empty list
+for time = flightdata.time.data
 %time        = ((time in sec   - 8.9 * 10 )             % 
-t            = ((15*60+39      - 8.9)* 10 )             %-8.9 correction 
+    t        = round((time-8.9)*10);                                 %-8.9 correction 
                                                         %because time in 
                                                         %data starts at 
                                                         %9 seconds not at 0.1 sec.
                                                         %Furthermore times
                                                         %10 to match with
                                                         %index number
-                                                        
-FuelUsed     = flightdata.lh_engine_FU.data(t) + flightdata.rh_engine_FU.data(t)
-FuelUsedKg   = FuelUsed * 0.45359237
-FuelLeft     = Fuelmass - FuelUsed
 
-
-steeringmat = [...
-   713100   2500
-   741533   2600
-   769960   2800
-   826906   2900
-   855405   3000
-   883904   3100
-   912480   3200
-   941062   3300
-   969697   3400
-   998340   3500
-   1027008  3600
-   1055684  3700
-   1084387  3800
-   1113100  3900
-   1141820  4000
-   1170550  4100
-   1199331  4200
-   ]';
     
-FlightFuelMoment   = interp1(steeringmat(2,:), steeringmat(1,:), FuelLeft, 'linear', 'extrap');
-FlightMoment = ZeroFuelMom + FlightFuelMoment;
-FlightMass   = RampMass - FuelUsed;
-FlightXcg    = FlightMoment / FlightMass;
 
-%% Other units
-C_bar = 2.0569                              %MAC lenght
+    FuelUsed     = flightdata.lh_engine_FU.data(t) + flightdata.rh_engine_FU.data(t);
+    FuelUsedKg   = FuelUsed * 0.45359237;
+    FuelLeft     = Fuelmass - FuelUsed;
 
-XcgMAC       = FlightXcg - 261.45           %Inches from the leading edgeMAC
-XcgMACmeter  = XcgMAC*0.0254                %XCG position inMeters from the leadiing edge MAC
-XcgMACper    = XcgMACmeter * 100/ C_bar     %percentage of MAC
+
+        steeringmat = [...
+       713100   2500
+       741533   2600
+       769960   2800
+       826906   2900
+       855405   3000
+       883904   3100
+       912480   3200
+       941062   3300
+       969697   3400
+       998340   3500
+       1027008  3600
+       1055684  3700
+       1084387  3800
+       1113100  3900
+       1141820  4000
+       1170550  4100
+       1199331  4200
+       ]';
+
+    FlightFuelMoment   = interp1(steeringmat(2,:), steeringmat(1,:), FuelLeft, 'linear', 'extrap');
+    FlightMoment = ZeroFuelMom + FlightFuelMoment;
+    FlightMass   = RampMass - FuelUsed;
+    FlightXcg    = FlightMoment / FlightMass;
+
+    %% Other units
+    C_bar = 2.0569;                              %MAC lenght
+
+    XcgMAC       = FlightXcg - 261.45;           %Inches from the leading edgeMAC
+    XcgMACmeter  = XcgMAC*0.0254;                %XCG position inMeters from the leadiing edge MAC
+    XcgMACper    = XcgMACmeter * 100/ C_bar;     %percentage of MAC
+
+    %% append
+    ls(end+1) = FlightMass;
+    ls2(end+1) = t;
+end
+  
