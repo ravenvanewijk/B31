@@ -3,13 +3,13 @@
 
 % Stationary flight condition
 
-hp0    = 1530.1;     % pressure altitude in the stationary flight condition [m]
-V0     = 134.56;      % true airspeed in the stationary flight condition [m/sec]
-alpha0 = 1.8/180*pi;       	  % angle of attack in the stationary flight condition [rad]
-th0    = 0.563/180*pi;       	  % pitch angle in the stationary flight condition [rad]
+hp0    = 1736.7;     % pressure altitude in the stationary flight condition [m]
+V0     = 168.8398;      % true airspeed in the stationary flight condition [m/sec]
+alpha0 = 5.4285/180*pi;       	  % angle of attack in the stationary flight condition [rad]
+th0    = 3.8658/180*pi;       	  % pitch angle in the stationary flight condition [rad]
 
 % Aircraft mass
-m      = 6756.9;         	  % mass [kg]
+m      = 6392.77;         	  % mass [kg]
 
 % aerodynamic properties
 e      = 0.873;            % Oswald factor [ ]
@@ -71,7 +71,7 @@ CD = CD0 + (CLa*alpha0)^2/(pi*A*e);  % Drag coefficient [ ]
 % Stabiblity derivatives
 
 CX0    = W*sin(th0)/(0.5*rho*V0^2*S);
-CXu    = -0.02792;
+CXu    = -0.095;
 CXa    = +0.47966;  %was negative 
 CXadot = +0.08330;
 CXq    = -0.28170;
@@ -186,7 +186,7 @@ C1s = [- 2* muc* (c/V0^2), 0, 0, 0;
 
 C2s = [CXu/V0, CXa, CZ0, CXq*(c/V0);
      CZu/V0, CZa, -CX0, (CZq + 2* muc)*(c/V0);
-     0, 0, 0,1*(c/V0);
+     0, 0, 0,(c/V0);
      Cmu/V0, Cma, 0, Cmq*(c/V0)];
 
 C3s = [CXde;
@@ -230,60 +230,112 @@ Da = zeros(4,2);
 sys2 = ss(Aa,Ba,Ca,Da);
 
 pole(sys2)
+%rltool(sys2(1,1))
 
 %% Plotting initial responses to disturbance input (requirement no.11)
 
 % Symmetric
 
 %% Short period
-%AoA and pitch rate the short period damping the best
-subplot(2,3,1)
-t = 0:0.01:5;
-%x0 = [0,0.1,0,0];
-y1 = -0.005*step(sys1, t); %distubance input on d_e pf -0.005 rad
-plot(t, y1(:,2),t,y1(:,4))
-legend('\alpha [rad]','q [rad/s]')
+% % AoA and pitch rate the short period damping the best
+% subplot(1,2,1)
+% t = 0:0.01:10;
+% y1 = -1/180*pi*step(sys1, t); %distubance input on d_e pf -1 deg
+% plot(t, y1(:,2))
+% xlabel('time [s]')
+% ylabel('\alpha [rad]')
+% grid()
+% title('Angle of attack')
+% 
+% subplot(1,2,2)
+% plot(t,y1(:,4))
+% xlabel('time [s]')
+% ylabel('q [rad/s]')
+% grid()
+% title('Pitch rate')
+
 
 %% Phugoid
-%U and theta show this eigenmotion response the best
-subplot(2,3,2)
-t = 0:0.01:1000;
-y2 = -0.005*step(sys1, t); %distubance input on d_e pf -0.005 rad
-plot(t, y2(:,1))
-legend('u [m/s]')
-
-subplot(2,3,3)
-t = 0:0.01:1000;
-y2 = -0.005*step(sys1, t); %distubance input on d_e pf -0.005 rad
-plot(t, y2(:,3))
-legend('\theta [rad]')
+% %U and theta show this eigenmotion response the best
+% subplot(2,2,1)
+% t = 0:0.01:400;
+% y2 = -1/180*pi*step(sys1, t); %distubance input on d_e pf -1 deg
+% plot(t, y2(:,1))            % speed = 150 m/s
+% xlabel('time [s]')
+% ylabel('u [m/s]')
+% grid()
+% title('Velocity')
+% 
+% subplot(2,2,2)
+% t = 0:0.01:400;
+% y2 = -1/180*pi*step(sys1, t); %distubance input on d_e pf -1 deg
+% plot(t, y2(:,2))            % speed = 150 m/s
+% xlabel('time [s]')
+% ylabel('\alpha [rad]')
+% grid()
+% title('Angle of attack')
+% 
+% subplot(2,2,3)
+% t = 0:0.01:400;
+% y2 = -1/180*pi*step(sys1, t); %distubance input on d_e pf -1 deg
+% plot(t, y2(:,3))            % speed = 150 m/s
+% xlabel('time [s]')
+% ylabel('\theta [rad]')
+% grid()
+% title('Pitch')
+% 
+% subplot(2,2,4)
+% t = 0:0.01:400;
+% y2 = -1/180*pi*step(sys1, t); %distubance input on d_e pf -1 deg
+% plot(t, y2(:,4))
+% xlabel('time [s]')
+% ylabel('q [rad/s]')
+% grid()
+% title('Pitch rate')
 
 %% Asymmetric
 
 %% Aperiodic roll
-subplot(2,3,4)
-t = 0:0.01:15;
-x0 = [0, 0.1, 0, 0];
-y3 = initial(sys2, x0, t);
-plot(t, y3(:,:))
-title('Aperiodic roll')
-legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
+% subplot(1,2,1)
+% t = 0:0.01:10;
+% x0 = [0, 1/180*pi, 0, 0];   %Initial roll angle
+% y3 = initial(sys2, x0, t);
+% plot(t, y3(:,:))
+% grid()
+% title('Aperiodic roll')
+% xlabel('time [s]')
+% x = 'x';
+% s2 = ['$\bar{' x '}$'];
+% ylabel(s2, 'Interpreter', 'LaTeX');
+% legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
+% 
+% %% Spiral
+% 
+% subplot(1,2,2)
+% t = 0:0.01:100;
+% x0 = [0, 1/180*pi, 0, 0];     %Initial roll angle
+% y5 = initial(sys2, x0, t);
+% plot(t, y5(:,:))
+% grid()
+% xlabel('time [s]')
+% x = 'x';
+% s3 = ['$\bar{' x '}$'];
+% ylabel(s3, 'Interpreter', 'LaTeX');
+% title('Spiral')
+% legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
 
 %% Dutch roll
-subplot(2,3,5)
-t = 0:0.01:15;
-x0 = [0.1, 0, 0, 0];
-y4 = initial(sys2, x0, t);
-plot(t, y4(:,:))
-title('Dutch roll')
-legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
-
-%% Spiral
-subplot(2,3,6)
-t = 0:0.01:100;
-x0 = [0, 0.1, 0, 0];
-y5 = initial(sys2, x0, t);
-plot(t, y5(:,:))
-title('Spiral')
-legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
+% 
+% t = 0:0.01:15;
+% x0 = [1/180*pi, 0, 0, 0];       %Initial sideslip angle
+% y4 = initial(sys2, x0, t);
+% plot(t, y4(:,:))
+% title('Dutch roll')
+% grid()
+% xlabel('time [s]')
+% x = 'x';
+% s4 = ['$\bar{' x '}$'];
+% ylabel(s4, 'Interpreter', 'LaTeX');
+% legend('\beta [rad]','\phi [rad]','p [rad/s]','r [rad/s]')
+% 
 

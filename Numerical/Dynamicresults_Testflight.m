@@ -1,44 +1,15 @@
-%Data from the flight test dynamic measurements is collected here
 
-% Phugoid 00:42
-% u [m/s], aplha [rad], theta [rad], q [rad/s]
-% time, Dadc1_tas, vane_AOA, Ahrs1_Pitch, Ahrs1_bPitchRate
+%u_tas = flightdata.Dadc1_tas.data();
+%alpha = deg2rad(flightdata.vane_AOA.data());
+theta = deg2rad(flightdata.Ahrs1_Pitch.data());
+q = deg2rad(flightdata.Ahrs1_bPitchRate.data());
+elev = deg2rad(flightdata.delta_e.data());
+phi = flightdata.Ahrs1_Roll.data()/180*pi;
+Rollrate= flightdata.Ahrs1_bRollRate.data()/180*pi;
+yawrate = flightdata.Ahrs1_bYawRate.data()/180*pi;
+rud_def = flightdata.delta_r.data()/180*pi;
+ail_def = flightdata.delta_a.data()/180*pi;
+timevector = 0:0.1:4212;
 
-t1 = 42*60;
-I1 = find(flightdata.time.data==t1);
-
-u_tas1 = flightdata.Dadc1_tas.data((I1+0):(I1+2000));
-alpha1 = flightdata.vane_AOA.data((I1+0):(I1+2000));
-theta1 = flightdata.Ahrs1_Pitch.data((I1+0):(I1+2000));
-q1 = flightdata.Ahrs1_bPitchRate.data((I1+0):(I1+2000));
-%elev_dte = flightdata.delta_e.data((I1+272):(I1+2000));
-
-time1 = 0:0.1:200;
-subplot(1,2,1)
-plot(time1,[u_tas1,alpha1,theta1,q1])
-legend('uTAS [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]')
-
-% Short period 00:45
-% u [m/s], aplha [rad], theta [rad], q [rad/s]
-% time, Dadc1_tas, vane_AOA, Ahrs1_Pitch, Ahrs1_bPitchRate
-
-t2 = 45*60;
-I2 = find(flightdata.time.data==t2);
-
-u_tas2 = flightdata.Dadc1_tas.data((I2):(I2+727));
-alpha2 = flightdata.vane_AOA.data((I2):(I2+727));
-theta2 = flightdata.Ahrs1_Pitch.data((I2):(I2+727));
-q2 = flightdata.Ahrs1_bPitchRate.data((I2):(I2+727));
-elev_dte2 = flightdata.delta_e.data((I2):(I2+727));
-
-time2 = 0:0.1:72.7;
-subplot(1,2,2)
-plot(time2,[u_tas2,alpha2,theta2,q2,elev_dte2]);
-
-legend('uTAS [m/s]','\alpha [rad]','\theta [rad]','q [rad/s]','elev')
-
-I = find(flightdata.time.data==939);
-
-% Dutch roll 00:46
-% Aperiodic roll 00:48
-% Spiral 00:52
+plot(timevector,[  theta, q, elev, phi, Rollrate, yawrate,rud_def,ail_def])
+legend('\theta','q','elev','phi','roll rate','yaw rate','rudder','ail_def')
