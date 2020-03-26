@@ -7,22 +7,24 @@ from math import radians as rad
 
 # Stationary flight condition
 
-hp0    =  1530.1    	      # pressure altitude in the stationary flight condition [m]
-V0     =  134.56        # true airspeed in the stationary flight condition [m/sec]
-alpha0 =  rad(1.8)          # angle of attack in the stationary flight condition [rad]
-th0    =  0.563       # pitch angle in the stationary flight condition [rad]
+hp0    =  1530.1    # pressure altitude in the stationary flight condition [m]
+V0     =  134.95    # true airspeed in the stationary flight condition [m/sec]
+alpha0 =  rad(1.80)      # angle of attack in the stationary flight condition [rad]
+th0    =  rad(0.5630)    # pitch angle in the stationary flight condition [rad]
+#Something is wrong with th0 and alpha0
 
 # Aircraft mass
 m      =  6612           # mass [kg]
 
 # aerodynamic properties
-e      =   0.838         # Oswald factor [ ]
-CD0    =   0.023          # Zero lift drag coefficient [ ]
-CLa    =   4.910          # Slope of CL-alpha curve [ ]
+e      =  0.873          # Oswald factor [ ]
+CD0    =  0.02205           # Zero lift drag coefficient [ ]
+CLa    =  4.68107           # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma    =   -0.6356        # longitudinal stabilty [ ]
-Cmde   =   -1.455         # elevator effectiveness [ ]
+Cma    =   -0.60358          # longitudinal stabilty [ ]
+Cmde   =    -1.38183        # elevator effectiveness [ ]
+
 
 # Aircraft geometry
 
@@ -76,7 +78,7 @@ CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e) # Drag coefficient [ ]
 # Stabiblity derivatives
 
 CX0    = W * sin(th0) / (0.5 * rho * V0 ** 2 * S)
-CXu    = -0.02792
+CXu    = -0.095
 CXa    = +0.47966		# Positive! (has been erroneously negative since 1993) 
 CXadot = +0.08330
 CXq    = -0.28170
@@ -151,8 +153,7 @@ print("                REAL VALUE      IMAGINARY VALUE")
 print("SHORT PERIOD    ", round(np.real(lamdac1),5), "      ",round(np.imag(lamdac1),5))
 print("PHUGOID         ", round(np.real(lamdac2),5), "      ",round(np.imag(lamdac2),5))
 print("APERIODIC ROLL  ", round(np.real(lamdab1),5), "      ",round(np.imag(lamdab1),5))
-print("DUTCH ROLL      ", round(np.real(lamdab2),5), "      ",round(np.imag(lamdab2),5))
 print("SPIRAL          ", round(np.real(lamdab3),5), "      ",round(np.imag(lamdab3),5))
-
+print("DUTCH ROLL      ", round(np.real(lamdab2),5), "      ",round(np.imag(lamdab2),5))
 
 
