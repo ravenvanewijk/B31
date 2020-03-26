@@ -1,16 +1,16 @@
 %%Calculate W(t) Xcg(t)
 load FTISxprt-20200305_flight3 %Initiate data
 
-%Passenger weights in ([kg's;inch;inch])
-%p1 = [80; 131; 1];                      %pilot 1
-%p2 = [102; 131; 1];                     %pilot 2
-%Marta = [60; 214: 1];                        %co-ordinator
-%Jari  = [75; 214; 1]     ;                    %observer 1L:		
-%Martin = [83; 251; 1]      ;                  %observer 1R:		
-%Wessel = [66; 251; 1]     ;                   %observer 2L:		
-%Simon =	[89; 288; 1]     ;                    %observer 2R:		
-%Niek =	[85; 288; 1]    ;                     %observer 3L:		
-%Julian	= [90; 170; 1]  ;                    %observer 3R:		
+%Passenger weights in ([kg's;inch)
+%p1 = [80; 131];                      %pilot 1
+%p2 = [102; 131];                     %pilot 2
+%Marta = [60; 214];                        %co-ordinator
+%Jari  = [75; 214]     ;                    %observer 1L:		
+%Martin = [83; 251]      ;                  %observer 1R:		
+%Wessel = [66; 251]     ;                   %observer 2L:		
+%Simon =	[89; 288]     ;                    %observer 2R:		
+%Niek =	[85; 288]    ;                     %observer 3L:		
+%Julian	= [90; 170]  ;                    %observer 3R:		
 
 %% Rampmass calculator
 %Payload 
@@ -48,7 +48,7 @@ RampXcg      =  RampMoment / RampMass ;
 
 %% In flight Weight and Xcg calculator
 %time        = ((time in sec   - 8.9 * 10 )             % 
-t            = ((15*60+39      - 8.9)* 10 )             %-8.9 correction 
+t            = ((19      - 8.9)* 10 )             %-8.9 correction 
                                                         %because time in 
                                                         %data starts at 
                                                         %9 seconds not at 0.1 sec.
@@ -88,7 +88,7 @@ FlightXcg    = FlightMoment / FlightMass;
 
 %% Other units
 C_bar = 2.0569                              %MAC lenght
-
+FlightMassKg = FlightMass * 0.45359237
 XcgMAC       = FlightXcg - 261.45           %Inches from the leading edgeMAC
 XcgMACmeter  = XcgMAC*0.0254                %XCG position inMeters from the leadiing edge MAC
 XcgMACper    = XcgMACmeter * 100/ C_bar     %percentage of MAC

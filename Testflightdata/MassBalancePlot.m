@@ -49,7 +49,10 @@ RampXcg      =  RampMoment / RampMass ;
 %% In flight Weight and Xcg calculator
 %%Plotter
 ls       = []                                           %Empty list
-ls2       = []                                           %Empty list
+ls2      = []                                          %Empty list
+ls3      = []                                          %Empty list
+ls4      = []                                          %Empty list
+ls5      = []
 for time = flightdata.time.data
 %time        = ((time in sec   - 8.9 * 10 )             % 
     t        = round((time-8.9)*10);                                 %-8.9 correction 
@@ -89,18 +92,57 @@ for time = flightdata.time.data
 
     FlightFuelMoment   = interp1(steeringmat(2,:), steeringmat(1,:), FuelLeft, 'linear', 'extrap');
     FlightMoment = ZeroFuelMom + FlightFuelMoment;
-    FlightMass   = RampMass - FuelUsed;
+    FlightMass   = RampMass - FuelUsed; 
     FlightXcg    = FlightMoment / FlightMass;
 
     %% Other units
     C_bar = 2.0569;                              %MAC lenght
-
+    FlightMassKG = FlightMass * 0.45359237;      % Flight mass in KG
     XcgMAC       = FlightXcg - 261.45;           %Inches from the leading edgeMAC
     XcgMACmeter  = XcgMAC*0.0254;                %XCG position inMeters from the leadiing edge MAC
     XcgMACper    = XcgMACmeter * 100/ C_bar;     %percentage of MAC
 
     %% append
-    ls(end+1) = FlightMass;
-    ls2(end+1) = t;
+    ls(end+1) = FlightMassKG;
+    ls2(end+1)= t;
+    ls3(end+1)= XcgMACmeter;
+    ls4= flightdata.lh_engine_FU.data;
+    ls5(end+1)= FlightMoment;
 end
-  
+%% Plot Weight vs time
+
+plot(flightdata.time.data, ls3(:,:),'LineWidth',2)
+title('Aircraft Xcg location during the flight (Distance from MAC)')
+xlabel('Time (sec)') 
+ylabel('Distance (m)') 
+ax = gca;
+ax.FontSize = 13
+saveas(gcf,'Barchart.png')
+
+%subplot(2,2,2)
+%plot(flightdata.time.data, ls3(:,:),'LineWidth',2)
+%title('Xcg ')
+%xlabel('Time (sec)') 
+%ylabel('Xcg distance') 
+%ax = gca;
+%ax.FontSize = 13
+
+%subplot(2,2,3)
+%plot(flightdata.time.data, ls4(:,:),'LineWidth',2)
+%title('fuel used ')
+%xlabel('Time (sec)') 
+%ylabel('Fuel used') 
+%ax = gca;
+%ax.FontSize = 13
+
+   % subplot(2,2,4)
+   % plot(flightdata.time.data, ls5(:,:),'LineWidth',2)
+   % title('Aircraft moment ')
+   % xlabel('Time (sec)') 
+   % ylabel('Moment )') 
+   % ax = gca;
+   % ax.FontSize = 13
+
+
+
+
